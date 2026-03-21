@@ -31,7 +31,7 @@ export function useAgui() {
   }
 
   async function sendMessage(
-    content: string,
+    _content: string,
     threadId: string,
     messageHistory: Array<{ role: string; content: string }>,
   ) {
@@ -73,8 +73,17 @@ export function useAgui() {
         chatStore.updateSharedState(state as Record<string, unknown>);
       },
       onStateDeltaEvent({ event }) {
-        if (event.delta) {
-          chatStore.mergeSharedState(event.delta as Record<string, unknown>);
+        if (event.delta && Array.isArray(event.delta)) {
+          const patch: Record<string, unknown> = {};
+          for (const op of event.delta) {
+            if (op.op === "replace" || op.op === "add") {
+              const key = String(op.path).replace(/^\//, "").split("/")[0];
+              patch[key] = op.value;
+            }
+          }
+          if (Object.keys(patch).length) {
+            chatStore.mergeSharedState(patch);
+          }
         }
       },
       onRunErrorEvent() {
