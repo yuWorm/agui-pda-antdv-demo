@@ -5,11 +5,13 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "aiofiles>=25.1.0",
     "aiosqlite>=0.22.1",
     "alembic>=1.18.4",
     "bcrypt>=5.0.0",
     "fastapi>=0.135.1",
     "httpx>=0.28.1",
+    "pydantic-ai>=1.70.0",
     "pydantic-ai-slim[ag-ui]>=1.70.0",
     "pydantic-settings>=2.13.1",
     "pyjwt[crypto]>=2.12.1",

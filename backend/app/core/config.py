@@ -31,10 +31,28 @@ class Settings(BaseSettings):
     # Model provider configs (JSON string, parsed at runtime)
     model_providers_json: str = "{}"
 
+    # Upload
+    upload_dir: str = "./data/uploads"
+    max_upload_size_mb: int = 10
+    allowed_upload_types: list[str] = [
+        "image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml",
+        "application/pdf",
+        "text/plain", "text/csv", "text/markdown",
+        "application/json",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.ms-excel",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ]
+
     @property
     def db_path(self) -> Path:
         url = self.database_url.replace("sqlite+aiosqlite:///", "")
         return Path(url).parent
+
+    @property
+    def upload_path(self) -> Path:
+        return Path(self.upload_dir)
 
 
 settings = Settings()

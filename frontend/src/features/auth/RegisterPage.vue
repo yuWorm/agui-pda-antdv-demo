@@ -11,7 +11,7 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <a-form layout="vertical" @finish="handleSubmit">
+  <a-form :model="form" layout="vertical" @finish="handleSubmit">
     <a-alert v-if="error" type="error" :message="error" show-icon style="margin-bottom: 16px" />
     <a-form-item label="Username" name="username" :rules="[{ required: true, min: 3 }]">
       <a-input v-model:value="form.username" size="large" placeholder="Choose a username" />

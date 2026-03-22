@@ -4,9 +4,109 @@
   box-sizing: border-box;
 }
 
+:root,
+[data-theme="light"] {
+  --color-bg: #ffffff;
+  --color-bg-secondary: #fafafa;
+  --color-bg-elevated: #ffffff;
+  --color-bg-hover: #f5f5f5;
+  --color-bg-active: #e6f4ff;
+  --color-bg-input: #ffffff;
+  --color-bg-code: #f5f5f5;
+  --color-bg-avatar: #f0f5ff;
+  --color-bg-tool: #fafafa;
+  --color-bg-kbd: #f5f5f5;
+
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #333333;
+  --color-text-tertiary: #666666;
+  --color-text-muted: #999999;
+  --color-text-hint: #bbbbbb;
+
+  --color-border: rgba(0, 0, 0, 0.06);
+  --color-border-secondary: rgba(0, 0, 0, 0.1);
+  --color-border-kbd: #e8e8e8;
+  --color-border-tool: #f0f0f0;
+  --color-border-table: #e8e8e8;
+
+  --color-primary: #1677ff;
+  --color-primary-hover: #4096ff;
+  --color-primary-bg: #e6f4ff;
+
+  --color-danger: #ff4d4f;
+  --color-danger-bg: #fff1f0;
+  --color-warning-bg: #fffbe6;
+  --color-warning-border: #ffe58f;
+
+  --color-send-inactive: #d9d9d9;
+  --color-thinking-dot: #bbbbbb;
+
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --shadow-popup: 0 12px 48px rgba(0, 0, 0, 0.12);
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --color-bg: #141414;
+  --color-bg-secondary: #1a1a1a;
+  --color-bg-elevated: #1f1f1f;
+  --color-bg-hover: #2a2a2a;
+  --color-bg-active: #111d2c;
+  --color-bg-input: #1f1f1f;
+  --color-bg-code: #2a2a2a;
+  --color-bg-avatar: #111d2c;
+  --color-bg-tool: #1f1f1f;
+  --color-bg-kbd: #2a2a2a;
+
+  --color-text-primary: #e8e8e8;
+  --color-text-secondary: #d0d0d0;
+  --color-text-tertiary: #a0a0a0;
+  --color-text-muted: #707070;
+  --color-text-hint: #555555;
+
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-secondary: rgba(255, 255, 255, 0.12);
+  --color-border-kbd: #3a3a3a;
+  --color-border-tool: #2a2a2a;
+  --color-border-table: #303030;
+
+  --color-primary: #1677ff;
+  --color-primary-hover: #4096ff;
+  --color-primary-bg: #111d2c;
+
+  --color-danger: #ff4d4f;
+  --color-danger-bg: #2a1215;
+  --color-warning-bg: #2b2111;
+  --color-warning-border: #594214;
+
+  --color-send-inactive: #3a3a3a;
+  --color-thinking-dot: #555555;
+
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.3);
+  --shadow-popup: 0 12px 48px rgba(0, 0, 0, 0.4);
+
+  color-scheme: dark;
+}
+
 html, body, #app {
   height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--color-text-primary);
+  background: var(--color-bg);
+  transition: color 0.3s, background-color 0.3s;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-primary-hover);
 }
 
 ::-webkit-scrollbar {
@@ -18,10 +118,10 @@ html, body, #app {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d9d9d9;
+  background: var(--color-border-secondary);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #bfbfbf;
+  background: var(--color-text-muted);
 }

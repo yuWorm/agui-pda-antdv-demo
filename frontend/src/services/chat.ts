@@ -1,5 +1,5 @@
 import api from "./api";
-import type { Message, Session } from "@/types/chat";
+import type { Attachment, Message, Session } from "@/types/chat";
 
 export const chatApi = {
   createSession(data: { title?: string; model_provider?: string; model_name?: string }) {
@@ -19,5 +19,19 @@ export const chatApi = {
   },
   getMessages(sessionId: string) {
     return api.get<Message[]>(`/chat/sessions/${sessionId}/messages`);
+  },
+  generateTitle(sessionId: string) {
+    return api.post<{ title: string }>(`/chat/sessions/${sessionId}/generate-title`);
+  },
+  uploadFile(file: File) {
+    const form = new FormData();
+    form.append("file", file);
+    return api.post<Attachment>("/upload", form, {
+      headers: { "Content-Type": "multipart/form-data" },
+      timeout: 60000,
+    });
+  },
+  executeTool(name: string, args: Record<string, unknown>) {
+    return api.post<{ result: string }>("/tools/execute", { name, arguments: args }, { timeout: 30000 });
   },
 };

@@ -1,7 +1,15 @@
 from fastapi import HTTPException, status
+from pydantic_ai import Agent
 
+from app.agent.provider import provider_manager
+from app.core.config import settings
 from app.db.repositories.message import MessageRepository
 from app.db.repositories.session import SessionRepository
+
+_TITLE_PROMPT = (
+    "Based on the following conversation, generate a short title (max 20 characters in the language of the conversation). "
+    "Return ONLY the title text, no quotes, no explanation."
+)
 
 
 class ChatService:
@@ -51,3 +59,28 @@ class ChatService:
         )
         await self.message_repo.commit()
         return message
+
+    async def generate_title(self, session_id: str, user_id: str) -> str:
+        session = await self.get_session(session_id, user_id)
+        messages = await self.message_repo.get_by_session(session_id)
+        if not messages:
+            raise HTTPException(status_code=400, detail="No messages to generate title from")
+
+        conversation = "\n".join(f"{m.role}: {m.content}" for m in messages[:10])
+
+        provider = session.model_provider or settings.default_model_provider
+        model_string = provider_manager.get_model_string(
+            provider, session.model_name or settings.default_model_name,
+        )
+        provider_manager.configure_env(provider)
+
+        try:
+            agent = Agent(model_string, instructions=_TITLE_PROMPT)
+            result = await agent.run(conversation)
+            title = result.output.strip().strip('"').strip("'")[:50]
+        except Exception:
+            return session.title
+
+        session.title = title
+        await self.session_repo.commit()
+        return title

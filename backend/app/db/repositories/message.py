@@ -16,6 +16,7 @@ class MessageRepository(BaseRepository[Message]):
         role: str,
         content: str = "",
         tool_calls: dict | None = None,
+        attachments: list | None = None,
         metadata_: dict | None = None,
     ) -> Message:
         next_order = await self._next_ordering(session_id)
@@ -24,6 +25,7 @@ class MessageRepository(BaseRepository[Message]):
             role=role,
             content=content,
             tool_calls=tool_calls,
+            attachments=attachments,
             metadata_=metadata_,
             ordering=next_order,
         )

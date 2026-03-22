@@ -1,11 +1,12 @@
+import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { chatApi } from "@/services/chat";
 import { useChatStore } from "@/stores/chat";
-import { useSettingsStore } from "@/stores/settings";
 
-export function useSessions() {
+export function useSessions(options?: { navigate?: boolean }) {
+  const shouldNavigate = options?.navigate ?? true;
   const chatStore = useChatStore();
-  const settingsStore = useSettingsStore();
+  const { sessions } = storeToRefs(chatStore);
   const router = useRouter();
 
   async function loadSessions() {
@@ -13,30 +14,29 @@ export function useSessions() {
     chatStore.setSessions(data);
   }
 
-  async function createSession(title?: string) {
-    const { data } = await chatApi.createSession({
-      title: title || "New Chat",
-      model_provider: settingsStore.modelProvider,
-      model_name: settingsStore.modelName,
-    });
-    chatStore.addSession(data);
-    chatStore.setCurrentSession(data.id);
+  async function createSession() {
+    const draftId = crypto.randomUUID();
     chatStore.setMessages([]);
-    await router.push(`/chat/${data.id}`);
+    chatStore.setDraftSession(draftId);
+    if (shouldNavigate) await router.push(`/chat/${draftId}`);
   }
 
   async function selectSession(sessionId: string) {
     chatStore.setCurrentSession(sessionId);
-    await router.push(`/chat/${sessionId}`);
+    if (shouldNavigate) await router.push(`/chat/${sessionId}`);
   }
 
   async function deleteSession(sessionId: string) {
     await chatApi.deleteSession(sessionId);
     chatStore.removeSession(sessionId);
     if (chatStore.currentSessionId === sessionId) {
-      chatStore.setCurrentSession(null);
-      chatStore.setMessages([]);
-      await router.push("/chat");
+      const remaining = chatStore.sessions;
+      if (remaining.length > 0) {
+        chatStore.setCurrentSession(remaining[0].id);
+        if (shouldNavigate) await router.push(`/chat/${remaining[0].id}`);
+      } else {
+        await createSession();
+      }
     }
   }
 
@@ -46,7 +46,7 @@ export function useSessions() {
   }
 
   return {
-    sessions: chatStore.sessions,
+    sessions,
     loadSessions,
     createSession,
     selectSession,

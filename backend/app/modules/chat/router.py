@@ -5,6 +5,7 @@ from app.db.repositories.message import MessageRepository
 from app.db.repositories.session import SessionRepository
 from pydantic import BaseModel as BaseModel
 from app.modules.chat.schemas import (
+    GenerateTitleResponse,
     MessageResponse,
     SessionCreate,
     SessionResponse,
@@ -62,6 +63,16 @@ async def update_session(
     return _session_response(session)
 
 
+@router.post("/sessions/{session_id}/generate-title", response_model=GenerateTitleResponse)
+async def generate_title(
+    session_id: str,
+    user_id: str = Depends(get_current_user_id),
+    service: ChatService = Depends(get_chat_service),
+):
+    title = await service.generate_title(session_id, user_id)
+    return GenerateTitleResponse(title=title)
+
+
 @router.delete("/sessions/{session_id}", status_code=204)
 async def delete_session(
     session_id: str,
@@ -84,7 +95,8 @@ async def get_messages(
 class MessageCreate(BaseModel):
     role: str
     content: str
-    tool_calls: dict | None = None
+    tool_calls: list | dict | None = None
+    attachments: list | None = None
 
 
 @router.post("/sessions/{session_id}/messages", response_model=MessageResponse)
@@ -94,7 +106,10 @@ async def create_message(
     user_id: str = Depends(get_current_user_id),
     service: ChatService = Depends(get_chat_service),
 ):
-    msg = await service.add_message(session_id, user_id, body.role, body.content, tool_calls=body.tool_calls)
+    msg = await service.add_message(
+        session_id, user_id, body.role, body.content,
+        tool_calls=body.tool_calls, attachments=body.attachments,
+    )
     return _message_response(msg)
 
 
@@ -117,6 +132,7 @@ def _message_response(message) -> MessageResponse:
         role=message.role,
         content=message.content,
         tool_calls=message.tool_calls,
+        attachments=message.attachments,
         metadata_=message.metadata_,
         ordering=message.ordering,
         created_at=message.created_at.isoformat(),

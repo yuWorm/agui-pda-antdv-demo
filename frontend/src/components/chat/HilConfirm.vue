@@ -11,7 +11,7 @@ const emit = defineEmits<{
 <template>
   <div class="hil-confirm">
     <div class="hil-header">
-      <a-tag color="orange">Confirmation Required</a-tag>
+      <a-tag color="warning">Confirmation Required</a-tag>
       <strong>{{ props.toolCall.name }}</strong>
     </div>
     <div class="hil-body">
@@ -31,30 +31,39 @@ const emit = defineEmits<{
 
 <style scoped>
 .hil-confirm {
-  background: #fffbe6;
-  border: 1px solid #ffe58f;
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 12px;
+  background: var(--color-warning-bg);
+  border: 1px solid var(--color-warning-border);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 16px;
 }
 
 .hil-header {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .hil-body {
   margin-bottom: 12px;
 }
 
+.hil-body p {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--color-text-tertiary);
+}
+
 .hil-body code {
   display: block;
-  background: #f5f5f5;
-  padding: 8px;
-  border-radius: 4px;
-  margin-top: 8px;
+  background: var(--color-bg-code);
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: var(--color-text-secondary);
 }
 
 .hil-actions {

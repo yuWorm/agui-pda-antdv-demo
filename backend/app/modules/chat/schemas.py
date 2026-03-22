@@ -22,12 +22,25 @@ class SessionResponse(BaseModel):
     updated_at: str
 
 
+class GenerateTitleResponse(BaseModel):
+    title: str
+
+
+class AttachmentResponse(BaseModel):
+    id: str
+    filename: str
+    url: str
+    mime_type: str
+    size: int
+
+
 class MessageResponse(BaseModel):
     id: str
     session_id: str
     role: str
     content: str
-    tool_calls: dict | None
+    tool_calls: list | dict | None
+    attachments: list[AttachmentResponse] | None
     metadata_: dict | None
     ordering: int
     created_at: str

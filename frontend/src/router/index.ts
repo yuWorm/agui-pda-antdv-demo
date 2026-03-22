@@ -28,6 +28,12 @@ const router = createRouter({
       meta: { layout: "main", requiresAuth: true },
     },
     {
+      path: "/demo",
+      name: "demo",
+      component: () => import("@/features/assistant/DemoPage.vue"),
+      meta: { layout: "main", requiresAuth: true },
+    },
+    {
       path: "/",
       redirect: "/chat",
     },

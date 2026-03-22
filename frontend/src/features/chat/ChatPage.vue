@@ -2,7 +2,6 @@
 import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import ChatRenderer from "@/components/chat/ChatRenderer.vue";
-import AppHeader from "@/components/common/AppHeader.vue";
 import SessionList from "@/components/common/SessionList.vue";
 import { useAuth } from "@/composables/useAuth";
 import { useSessions } from "@/composables/useSessions";
@@ -26,15 +25,12 @@ onMounted(async () => {
 
 <template>
   <div class="chat-page">
-    <AppHeader />
-    <div class="chat-body">
-      <aside class="sidebar">
-        <SessionList />
-      </aside>
-      <main class="main-area">
-        <ChatRenderer :session-id="sessionId" />
-      </main>
-    </div>
+    <aside class="sidebar">
+      <SessionList />
+    </aside>
+    <main class="main-area">
+      <ChatRenderer :session-id="sessionId" />
+    </main>
   </div>
 </template>
 
@@ -42,24 +38,22 @@ onMounted(async () => {
 .chat-page {
   height: 100vh;
   display: flex;
-  flex-direction: column;
-}
-
-.chat-body {
-  flex: 1;
-  display: flex;
   overflow: hidden;
 }
 
 .sidebar {
   width: 260px;
-  border-right: 1px solid #f0f0f0;
-  background: #fafafa;
-  overflow-y: auto;
+  flex-shrink: 0;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-bg-elevated);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .main-area {
   flex: 1;
   overflow: hidden;
+  background: var(--color-bg);
 }
 </style>
